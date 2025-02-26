@@ -74,7 +74,7 @@ if menu == "Inserir Mensagem":
 
     user_id = st.text_input("ID do Usuário") # mostrar os lista_user_ids
     idade = st.number_input("Idade do Usuário", min_value=1, max_value=120)
-    tema = st.selectbox("Tema", ["política", "saúde", "tecnologia"])
+    tema = st.selectbox("Tema", ["Política", "Saúde", "Tecnologia", "Esportes", "Música", "Cinema", "Ciência"])
     texto = st.text_area("Digite sua mensagem")
 
     if st.button("Enviar"):
@@ -114,6 +114,7 @@ elif menu == "Buscar Mensagens de um Usuário":
         
         if rows:
             for row in rows:
+                st.write(f"👤 Usuário: {row.usuario_id} | **{row.idade_usuario}** anos de idade")
                 st.write(f"📅 {row.data_postagem} | **{row.tema}**")
                 st.write(f"📝 {row.texto}")
                 st.write("---")
@@ -143,6 +144,7 @@ elif menu == "Buscar Mensagem Específica":
         
         if rows:
             for row in rows:
+                st.write(f"👤 Usuário: {row.usuario_id} | **{row.idade_usuario}** anos de idade")
                 st.write(f"📅 {row.data_postagem} | **{row.tema}**")
                 st.write(f"📝 {row.texto}")
                 st.write("---")
@@ -166,7 +168,7 @@ elif menu == "Buscar Mensagens por Data":
         
         if rows:
             for row in rows:
-                st.write(f"👤 Usuário: {row.usuario_id}")
+                st.write(f"👤 Usuário: {row.usuario_id} | **{row.idade_usuario}** anos de idade")
                 st.write(f"📅 {row.data_postagem} | **{row.tema}**")
                 st.write(f"📝 {row.texto}")
                 st.write("---")
