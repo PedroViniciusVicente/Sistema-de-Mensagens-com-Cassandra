@@ -31,6 +31,7 @@ def inicializar_database():
     ############### CRIAÇÃO DAS TABLES ###############
     # drops para zerar as alteracoes
     session.execute("DROP MATERIALIZED VIEW IF EXISTS mensagens_por_usuario_tema;")
+    session.execute("DROP MATERIALIZED VIEW IF EXISTS mensagens_por_id;")
     session.execute(""" DROP TABLE IF EXISTS mensagens; """)
 
 
@@ -97,7 +98,7 @@ def inicializar_database():
 
 
     # Criar um índice e executar a consulta: “recuperar, para cada usuário, os tipos de mensagens enviadas e a frequência delas”.
-    #session.execute("""CREATE INDEX idx_tema ON mensagens (tema);""")
+    session.execute("""CREATE INDEX idx_tema ON mensagens (tema);""")
 
     # Criar um índice para consultas sobre data
     session.execute("""CREATE INDEX idx_data ON mensagens (data_postagem);""")
@@ -116,6 +117,14 @@ def inicializar_database():
         PRIMARY KEY ((usuario_id), tema, data_postagem, mensagem_id);
     """)
 
+    # VIEW DAS MENSAGENS_ID
+    session.execute("""
+        CREATE MATERIALIZED VIEW IF NOT EXISTS mensagens_por_id AS
+        SELECT mensagem_id, usuario_id, data_postagem
+        FROM mensagens
+        WHERE mensagem_id IS NOT NULL AND usuario_id IS NOT NULL AND data_postagem IS NOT NULL
+        PRIMARY KEY (mensagem_id, usuario_id, data_postagem);
+    """)
 
 
 
