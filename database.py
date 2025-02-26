@@ -33,6 +33,7 @@ def inicializar_database():
     session.execute("DROP MATERIALIZED VIEW IF EXISTS mensagens_por_usuario_tema;")
     session.execute(""" DROP TABLE IF EXISTS mensagens; """)
 
+
     session.execute("""
         CREATE TABLE IF NOT EXISTS mensagens (
             usuario_id UUID,
@@ -91,15 +92,19 @@ def inicializar_database():
 
     ############### CRIAÇÃO DOS INDICES ###############
 
-    # Indice para agilizar as consultas por usuario
+    # Indice para agilizar as consultas por mensagem_id
+    session.execute("""CREATE INDEX idx_mensagem_id ON mensagens (mensagem_id);""")
 
-    # Indice para agilizar as consultas por data
 
-    # Criar um índice e executar a consulta: “recuperar, para cada usuário, os tipos de mensagens enviadas e a frequência delas”. ???
-    session.execute("""CREATE INDEX idx_tema ON mensagens (tema);""")
-    # SELECT tema, count(*) AS frequencia FROM mensagens WHERE usuario_id = f7ae400e-4626-447b-9968-8a67c95b9831 GROUP BY tema;
+    # Criar um índice e executar a consulta: “recuperar, para cada usuário, os tipos de mensagens enviadas e a frequência delas”.
+    #session.execute("""CREATE INDEX idx_tema ON mensagens (tema);""")
 
-    # VIEW
+    # Criar um índice para consultas sobre data
+    session.execute("""CREATE INDEX idx_data ON mensagens (data_postagem);""")
+
+
+
+    # VIEW DOS TEMAS
     session.execute("""
         CREATE MATERIALIZED VIEW IF NOT EXISTS mensagens_por_usuario_tema AS
         SELECT usuario_id, tema, data_postagem, mensagem_id
@@ -110,6 +115,8 @@ def inicializar_database():
             AND mensagem_id IS NOT NULL
         PRIMARY KEY ((usuario_id), tema, data_postagem, mensagem_id);
     """)
+
+
 
 
 # Serve para que o codigo desse arquivo seja executado apenas quando vc der o python3 database.py explicitamente ou importar e chamar sua função,
